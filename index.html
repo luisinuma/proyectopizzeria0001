@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>🎯 Portafolio Matemático Interactivo</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        :root {
+            --rosa-neon: #FF6B8B;
+            --cian-electrico: #36D1DC;
+            --amarillo-sol: #FFD166;
+            --purpura-neon: #7B68EE;
+            --verde-esmeralda: #06D6A0;
+            --naranja-fuego: #FF8E53;
+            --azul-cielo: #4A90E2;
+            --morado-profundo: #9B59B6;
+            
+            --gradiente-arcoiris: linear-gradient(45deg, #FF6B8B, #FFD166, #06D6A0, #36D1DC, #7B68EE);
+            --gradiente-sunset: linear-gradient(45deg, #FF6B8B, #FF8E53, #FFD166);
+            --gradiente-ocean: linear-gradient(45deg, #36D1DC, #4A90E2, #7B68EE);
+            --gradiente-forest: linear-gradient(45deg, #06D6A0, #36D1DC, #4A90E2);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Comic Sans MS', cursive;
+        }
+
+        body {
+            background: var(--gradiente-arcoiris);
+            color: #333;
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        header {
+            background: var(--gradiente-arcoiris);
+            color: white;
+            text-align: center;
+            padding: 2rem 1rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+
+        header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            text-shadow: 3px 3px 6px rgba(0,0,0,0.4);
+        }
+
+        .menu {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            padding: 1rem;
+            background: rgba(255,255,255,0.9);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            flex-wrap: wrap;
+        }
+
+        .menu-btn {
+            padding: 0.8rem 1.5rem;
+            background: var(--gradiente-ocean);
+            color: white;
+            border: none;
+            border-radius: 25px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        .menu-btn:hover {
+            transform: translateY(-3px);
+        }
+
+        .menu-btn.active {
+            background: var(--gradiente-sunset);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .seccion {
+            display: none;
+            animation: aparecer 0.5s ease;
+        }
+
+        .seccion.activa {
+            display: block;
+        }
+
+        @keyframes aparecer {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .tarjeta {
+            background: white;
+            border-radius: 20px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            border: 5px solid;
+            transition: transform 0.3s ease;
+        }
+
+        .tarjeta:hover {
+            transform: translateY(-5px);
+        }
+
+        .tarjeta-numeros { border-color: var(--rosa-neon); }
+        .tarjeta-sumas { border-color: var(--verde-esmeralda); }
+        .tarjeta-restas { border-color: var(--azul-cielo); }
+        .tarjeta-figuras { border-color: var(--amarillo-sol); }
+        .tarjeta-juego { border-color: var(--purpura-neon); }
+        .tarjeta-areas { border-color: var(--cian-electrico); }
+
+        h2 {
+            color: #2C3E50;
+            margin-bottom: 1rem;
+            font-size: 1.8rem;
+        }
+
+        .ejemplo {
+            font-size: 2rem;
+            text-align: center;
+            margin: 1.5rem 0;
+            padding: 1rem;
+            background: var(--gradiente-sunset);
+            color: white;
+            border-radius: 15px;
+            font-weight: bold;
+        }
+
+        .calculadora {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin: 1.5rem 0;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        input[type="number"] {
+            padding: 0.8rem;
+            border: 3px solid var(--cian-electrico);
+            border-radius: 10px;
+            font-size: 1.1rem;
+            width: 100px;
+            text-align: center;
+        }
+
+        button {
+            padding: 0.8rem 1.5rem;
+            background: var(--gradiente-forest);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: bold;
+        }
+
+        button:hover {
+            transform: scale(1.05);
+        }
+
+        .resultado {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--verde-esmeralda);
+            margin-top: 1rem;
+            padding: 1rem;
+            background: white;
+            border-radius: 10px;
+            border: 3px solid var(--verde-esmeralda);
+            text-align: center;
+        }
+
+        .juego-container {
+            text-align: center;
+            padding: 2rem;
+            background: rgba(255,255,255,0.9);
+            border-radius: 20px;
+            margin: 2rem 0;
+        }
+
+        .problema {
+            font-size: 3rem;
+            margin: 2rem 0;
+            color: var(--purpura-neon);
+        }
+
+        .feedback {
+            font-size: 1.5rem;
+            margin: 1rem 0;
+            padding: 1rem;
+            border-radius: 10px;
+            font-weight: bold;
+        }
+
+        .correcto {
+            background: rgba(6, 214, 160, 0.2);
+            color: var(--verde-esmeralda);
+            border: 2px solid var(--verde-esmeralda);
+        }
+
+        .incorrecto {
+            background: rgba(255, 107, 139, 0.2);
+            color: var(--rosa-neon);
+            border: 2px solid var(--rosa-neon);
+        }
+
+        .figuras-selector {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .figura-btn {
+            padding: 1rem;
+            background: white;
+            border: 3px solid;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+            min-width: 120px;
+        }
+
+        .figura-btn:hover, .figura-btn.activa {
+            transform: translateY(-5px);
+        }
+
+        .cuadrado-btn { border-color: var(--amarillo-sol); }
+        .rectangulo-btn { border-color: var(--azul-cielo); }
+        .triangulo-btn { border-color: var(--verde-esmeralda); }
+
+        canvas {
+            border: 5px solid var(--purpura-neon);
+            border-radius: 15px;
+            background: white;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+            margin-top: 1rem;
+        }
+
+        .evaluacion {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        .emoji-btn {
+            font-size: 4rem;
+            background: none;
+            border: none;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .emoji-btn:hover {
+            transform: scale(1.3);
+        }
+
+        footer {
+            background: var(--gradiente-ocean);
+            color: white;
+            text-align: center;
+            padding: 2rem;
+            margin-top: 3rem;
+        }
+
+        @media (max-width: 768px) {
+            .menu {
+                flex-direction: column;
+                align-items: center;
+            }
+            .menu-btn {
+                width: 90%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>🎯 Portafolio Matemático Interactivo</h1>
+        <p>✨ Aprende matemáticas jugando - 1° Primaria ✨</p>
+    </header>
+
+    <nav class="menu">
+        <button class="menu-btn active" onclick="mostrarSeccion('inicio')">🏠 Inicio</button>
+        <button class="menu-btn" onclick="mostrarSeccion('numeros')">1️⃣ Números</button>
+        <button class="menu-btn" onclick="mostrarSeccion('sumas')">➕ Sumas</button>
+        <button class="menu-btn" onclick="mostrarSeccion('restas')">➖ Restas</button>
+        <button class="menu-btn" onclick="mostrarSeccion('figuras')">🔺 Figuras</button>
+        <button class="menu-btn" onclick="mostrarSeccion('juego')">🎮 Juego Sumas</button>
+        <button class="menu-btn" onclick="mostrarSeccion('areas')">📐 Áreas</button>
+    </nav>
+
+    <div class="container">
+        <section id="inicio" class="seccion activa">
+            <div class="tarjeta" style="border-color: var(--purpura-neon);">
+                <h2>🌟 ¡Bienvenido al Portafolio Matemático!</h2>
+                <p style="font-size: 1.2rem; margin-bottom: 1.5rem;">
+                    Aprende matemáticas básicas de forma divertida e interactiva.
+                    ¡Haz clic en las secciones del menú para comenzar!
+                </p>
+                
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; margin-top: 2rem;">
+                    <div style="background: linear-gradient(45deg, var(--rosa-neon), var(--naranja-fuego)); color: white; padding: 1.5rem; border-radius: 15px; text-align: center;">
+                        <h3 style="color: white;">🎯 Objetivo</h3>
+                        <p>Aprender conceptos matemáticos básicos mediante la práctica interactiva.</p>
+                    </div>
+                    
+                    <div style="background: linear-gradient(45deg, var(--verde-esmeralda), var(--cian-electrico)); color: white; padding: 1.5rem; border-radius: 15px; text-align: center;">
+                        <h3 style="color: white;">✨ Características</h3>
+                        <p>Interfaz colorida, ejercicios interactivos, juegos educativos.</p>
+                    </div>
+                    
+                    <div style="background: linear-gradient(45deg, var(--purpura-neon), var(--azul-cielo)); color: white; padding: 1.5rem; border-radius: 15px; text-align: center;">
+                        <h3 style="color: white;">👨‍🎓 Para Quién</h3>
+                        <p>Estudiantes de 1° Primaria (6-7 años).</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="numeros" class="seccion">
+            <div class="tarjeta tarjeta-numeros">
+                <h2>🔢 Números del 1 al 10</h2>
+                <p>Contamos objetos y aprendemos los números de forma divertida.</p>
+                
+                <div class="ejemplo">⭐⭐⭐⭐⭐</div>
+                
+                <div style="text-align: center; margin: 1.5rem 0;">
+                    <button onclick="contarEstrellas()">🧮 Contar Estrellas</button>
+                </div>
+                
+                <div id="resultado-numeros" class="resultado">Haz clic en el botón para contar</div>
+            </div>
+        </section>
+
+        <section id="sumas" class="seccion">
+            <div class="tarjeta tarjeta-sumas">
+                <h2>➕ Sumas Sencillas</h2>
+                <p>Sumar es juntar cosas. ¡Vamos a practicar!</p>
+                
+                <div class="ejemplo">2 + 1 = 3</div>
+                
+                <div class="calculadora">
+                    <input type="number" id="num1-suma" placeholder="5" min="0" max="10">
+                    <span style="font-size: 1.5rem; font-weight: bold;">+</span>
+                    <input type="number" id="num2-suma" placeholder="3" min="0" max="10">
+                    <button onclick="calcularSuma()">= Calcular</button>
+                </div>
+                
+                <div id="resultado-suma" class="resultado">Resultado aparecerá aquí</div>
+            </div>
+        </section>
+
+        <section id="restas" class="seccion">
+            <div class="tarjeta tarjeta-restas">
+                <h2>➖ Restas Sencillas</h2>
+                <p>Restar es quitar. ¡Vamos a aprender!</p>
+                
+                <div class="ejemplo">5 - 2 = 3</div>
+                
+                <div class="calculadora">
+                    <input type="number" id="num1-resta" placeholder="8" min="0" max="10">
+                    <span style="font-size: 1.5rem; font-weight: bold;">-</span>
+                    <input type="number" id="num2-resta" placeholder="3" min="0" max="10">
+                    <button onclick="calcularResta()">= Calcular</button>
+                </div>
+                
+                <div id="resultado-resta" class="resultado">Resultado aparecerá aquí</div>
+            </div>
+        </section>
+
+        <section id="figuras" class="seccion">
+            <div class="tarjeta tarjeta-figuras">
+                <h2>🔺 Figuras Geométricas</h2>
+                <p>Aprende las formas básicas con colores.</p>
+                
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1rem; margin: 2rem 0;">
+                    <div style="text-align: center; padding: 1rem; background: rgba(255, 107, 139, 0.1); border-radius: 15px; border: 3px solid var(--rosa-neon);">
+                        <div style="font-size: 3rem;">●</div>
+                        <h3>Círculo</h3>
+                    </div>
+                    
+                    <div style="text-align: center; padding: 1rem; background: rgba(255, 209, 102, 0.1); border-radius: 15px; border: 3px solid var(--amarillo-sol);">
+                        <div style="font-size: 3rem;">■</div>
+                        <h3>Cuadrado</h3>
+                    </div>
+                    
+                    <div style="text-align: center; padding: 1rem; background: rgba(6, 214, 160, 0.1); border-radius: 15px; border: 3px solid var(--verde-esmeralda);">
+                        <div style="font-size: 3rem;">▲</div>
+                        <h3>Triángulo</h3>
+                    </div>
+                    
+                    <div style="text-align: center; padding: 1rem; background: rgba(74, 144, 226, 0.1); border-radius: 15px; border: 3px solid var(--azul-cielo);">
+                        <div style="font-size: 3rem;">▬</div>
+                        <h3>Rectángulo</h3>
+                    </div>
+                </div>
+                
+                <div style="text-align: center;">
+                    <button onclick="mostrarFiguraAleatoria()">🎲 Mostrar Figura Aleatoria</button>
+                </div>
+                
+                <div id="figura-aleatoria" class="resultado">Haz clic en el botón</div>
+            </div>
+        </section>
+
+        <section id="juego" class="seccion">
+            <div class="tarjeta tarjeta-juego">
+                <h2>🎮 Juego de Sumas Interactivo</h2>
+                <p>¡Practica sumas y gana puntos!</p>
+                
+                <div class="juego-container">
+                    <div style="display: flex; justify-content: center; gap: 2rem; margin-bottom: 2rem; flex-wrap: wrap;">
+                        <div style="background: var(--verde-esmeralda); color: white; padding: 1rem; border-radius: 10px;">
+                            <h3 style="color: white;">✅ Correctas</h3>
+                            <div id="correctas" style="font-size: 2rem;">0</div>
+                        </div>
+                        
+                        <div style="background: var(--rosa-neon); color: white; padding: 1rem; border-radius: 10px;">
+                            <h3 style="color: white;">❌ Incorrectas</h3>
+                            <div id="incorrectas" style="font-size: 2rem;">0</div>
+                        </div>
+                        
+                        <div style="background: var(--amarillo-sol); color: white; padding: 1rem; border-radius: 10px;">
+                            <h3 style="color: white;">🏆 Puntos</h3>
+                            <div id="puntos" style="font-size: 2rem;">0</div>
+                        </div>
+                    </div>
+                    
+                    <div class="problema" id="problema-juego">0 + 0 = ?</div>
+                    
+                    <div style="display: flex; justify-content: center; gap: 1rem; margin: 2rem 0; flex-wrap: wrap;">
+                        <input type="number" id="respuesta-juego" placeholder="Tu respuesta" style="width: 150px;">
+                        <button onclick="verificarRespuesta()">✅ Verificar</button>
+                    </div>
+                    
+                    <div id="feedback-juego" class="feedback">Escribe tu respuesta</div>
+                    
+                    <div style="margin-top: 2rem;">
+                        <button onclick="nuevoProblema()" style="margin-right: 1rem;">🔄 Nuevo Problema</button>
+                        <button onclick="reiniciarJuego()">🔄 Reiniciar</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="areas" class="seccion">
+            <div class="tarjeta tarjeta-areas">
+                <h2>📐 Calculadora de Áreas</h2>
+                
+                <div class="figuras-selector">
+                    <button class="figura-btn cuadrado-btn activa" onclick="seleccionarFigura('cuadrado')">■ Cuadrado</button>
+                    <button class="figura-btn rectangulo-btn" onclick="seleccionarFigura('rectangulo')">▬ Rectángulo</button>
+                    <button class="figura-btn triangulo-btn" onclick="seleccionarFigura('triangulo')">▲ Triángulo</button>
+                </div>
+                
+                <div id="calc-cuadrado" style="text-align: center; margin: 2rem 0;">
+                    <label style="font-weight: bold;">Lado del cuadrado:</label><br>
+                    <input type="number" id="lado-cuadrado" placeholder="5" min="1" style="margin: 0.5rem;">
+                    <button onclick="calcularAreaCuadrado()">📐 Calcular</button>
+                </div>
+                
+                <div id="calc-rectangulo" style="display: none; text-align: center; margin: 2rem 0;">
+                    <label style="font-weight: bold;">Base y Altura:</label><br>
+                    <input type="number" id="base-rectangulo" placeholder="Base" min="1" style="margin: 0.5rem; width: 100px;">
+                    <input type="number" id="altura-rectangulo" placeholder="Altura" min="1" style="margin: 0.5rem; width: 100px;">
+                    <button onclick="calcularAreaRectangulo()">📐 Calcular</button>
+                </div>
+                
+                <div id="calc-triangulo" style="display: none; text-align: center; margin: 2rem 0;">
+                    <label style="font-weight: bold;">Base y Altura:</label><br>
+                    <input type="number" id="base-triangulo" placeholder="Base" min="1" style="margin: 0.5rem; width: 100px;">
+                    <input type="number" id="altura-triangulo" placeholder="Altura" min="1" style="margin: 0.5rem; width: 100px;">
+                    <button onclick="calcularAreaTriangulo()">📐 Calcular</button>
+                </div>
+                
+                <div id="resultado-area" class="resultado">El resultado aparecerá aquí</div>
+                
+                <div style="text-align: center;">
+                    <canvas id="canvas-figura" width="400" height="300"></canvas>
+                </div>
+            </div>
+        </section>
+
+        <section style="margin-top: 3rem;">
+            <div class="tarjeta" style="border-color: var(--gradiente-arcoiris);">
+                <h2>😊 ¿Cómo te fue hoy?</h2>
+                
+                <div class="evaluacion">
+                    <button class="emoji-btn" onclick="evaluar('😊')">😊</button>
+                    <button class="emoji-btn" onclick="evaluar('😐')">😐</button>
+                    <button class="emoji-btn" onclick="evaluar('😢')">😢</button>
+                </div>
+                
+                <div id="mensaje-evaluacion" class="resultado">¡Gracias por tu feedback!</div>
+            </div>
+        </section>
+    </div>
+
+    <footer>
+        <p style="font-size: 1.2rem;">🎨 Portafolio Matemático Interactivo</p>
+        <p>© 2026 - Matemática 1° Primaria | HTML5, CSS3 y JavaScript</p>
+    </footer>
+
+    <script>
+        let puntajeJuego = 0;
+        let correctasJuego = 0;
+        let incorrectasJuego = 0;
+        let numA = 0;
+        let numB = 0;
+        let figuraSeleccionada = 'cuadrado';
+
+        function mostrarSeccion(id) {
+            document.querySelectorAll('.seccion').forEach(s => s.classList.remove('activa'));
+            document.getElementById(id).classList.add('activa');
+            
+            document.querySelectorAll('.menu-btn').forEach(b => b.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            if (id === 'juego') nuevoProblema();
+            if (id === 'areas') dibujarFigura();
+        }
+
+        function contarEstrellas() {
+            document.getElementById('resultado-numeros').innerHTML = '🎉 ¡Hay 5 estrellas! ⭐';
+        }
+
+        function calcularSuma() {
+            const n1 = parseInt(document.getElementById('num1-suma').value) || 0;
+            const n2 = parseInt(document.getElementById('num2-suma').value) || 0;
+            document.getElementById('resultado-suma').innerHTML = 
+                `✅ ${n1} + ${n2} = <span style="font-size: 1.8rem;">${n1 + n2}</span>`;
+        }
+
+        function calcularResta() {
+            const n1 = parseInt(document.getElementById('num1-resta').value) || 0;
+            const n2 = parseInt(document.getElementById('num2-resta').value) || 0;
+            if (n2 > n1) {
+                document.getElementById('resultado-resta').innerHTML = '⚠️ El segundo número debe ser menor';
+                return;
+            }
+            document.getElementById('resultado-resta').innerHTML = 
+                `✅ ${n1} - ${n2} = <span style="font-size: 1.8rem;">${n1 - n2}</span>`;
+        }
+
+        function mostrarFiguraAleatoria() {
+            const figuras = [
+                { icon: '●', nombre: 'Círculo', color: 'var(--rosa-neon)' },
+                { icon: '■', nombre: 'Cuadrado', color: 'var(--amarillo-sol)' },
+                { icon: '▲', nombre: 'Triángulo', color: 'var(--verde-esmeralda)' },
+                { icon: '▬', nombre: 'Rectángulo', color: 'var(--azul-cielo)' }
+            ];
+            const f = figuras[Math.floor(Math.random() * figuras.length)];
+            document.getElementById('figura-aleatoria').innerHTML = 
+                `<div style="font-size: 4rem; color: ${f.color}">${f.icon}</div><h3>${f.nombre}</h3>`;
+        }
+
+        function nuevoProblema() {
+            numA = Math.floor(Math.random() * 10) + 1;
+            numB = Math.floor(Math.random() * 10) + 1;
+            document.getElementById('problema-juego').textContent = `${numA} + ${numB} = ?`;
+            document.getElementById('respuesta-juego').value = '';
+            document.getElementById('feedback-juego').textContent = 'Escribe tu respuesta';
+            document.getElementById('feedback-juego').className = 'feedback';
+        }
+
+        function verificarRespuesta() {
+            const resp = parseInt(document.getElementById('respuesta-juego').value);
+            const fb = document.getElementById('feedback-juego');
+            
+            if (isNaN(resp)) {
+                fb.textContent = '⚠️ Ingresa un número';
+                fb.className = 'feedback incorrecto';
+                return;
+            }
+            
+            if (resp === numA + numB) {
+                correctasJuego++;
+                puntajeJuego += 10;
+                fb.innerHTML = `✅ ¡Correcto! ${numA} + ${numB} = ${numA + numB}`;
+                fb.className = 'feedback correcto';
+            } else {
+                incorrectasJuego++;
+                puntajeJuego = Math.max(0, puntajeJuego - 5);
+                fb.innerHTML = `❌ Incorrecto. La respuesta es ${numA + numB}`;
+                fb.className = 'feedback incorrecto';
+            }
+            
+            document.getElementById('correctas').textContent = correctasJuego;
+            document.getElementById('incorrectas').textContent = incorrectasJuego;
+            document.getElementById('puntos').textContent = puntajeJuego;
+            
+            setTimeout(nuevoProblema, 2000);
+        }
+
+        function reiniciarJuego() {
+            puntajeJuego = 0;
+            correctasJuego = 0;
+            incorrectasJuego = 0;
+            document.getElementById('correctas').textContent = '0';
+            document.getElementById('incorrectas').textContent = '0';
+            document.getElementById('puntos').textContent = '0';
+            nuevoProblema();
+        }
+
+        function seleccionarFigura(fig) {
+            figuraSeleccionada = fig;
+            document.querySelectorAll('.figura-btn').forEach(b => b.classList.remove('activa'));
+            event.target.classList.add('activa');
+            
+            document.getElementById('calc-cuadrado').style.display = 'none';
+            document.getElementById('calc-rectangulo').style.display = 'none';
+            document.getElementById('calc-triangulo').style.display = 'none';
+            document.getElementById(`calc-${fig}`).style.display = 'block';
+            
+            dibujarFigura();
+        }
+
+        function calcularAreaCuadrado() {
+            const lado = parseFloat(document.getElementById('lado-cuadrado').value);
+            if (!lado || lado <= 0) {
+                document.getElementById('resultado-area').innerHTML = '⚠️ Ingresa un valor válido';
+                return;
+            }
+            const area = lado * lado;
+            document.getElementById('resultado-area').innerHTML = 
+                `✅ Área = ${lado} × ${lado} = <span style="font-size: 1.8rem;">${area}</span> unidades²`;
+            dibujarFigura();
+        }
+
+        function calcularAreaRectangulo() {
+            const base = parseFloat(document.getElementById('base-rectangulo').
